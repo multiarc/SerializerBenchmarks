@@ -12,7 +12,6 @@ Implemented benchmarks for the following serializers:
 - Bois (https://github.com/salarcode/Bois)
 - Ceras (https://github.com/rikimaru0345/Ceras)
 - FastJson ( https://github.com/mgholam/fastJSON/)
-- FlatBuffer (https://google.github.io/flatbuffers/)
 - GroBuf (https://github.com/skbkontur/GroBuf)
 - JIL (https://github.com/kevin-montrose/Jil)
 - Json.NET (http://www.newtonsoft.com/json)
