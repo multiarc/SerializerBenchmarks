@@ -1,0 +1,17 @@
+﻿// https://github.com/protocolbuffers/protobuf/releases
+// protoc --csharp_out=<absolute_path_to_this_file> --proto_path=<absolute_path_to_this_file> ProtobufDataItem.proto
+
+syntax = "proto3";
+
+option csharp_namespace = "SerializersBenchmark.Models";
+
+message ProtobufChildDataItem {
+    string Title = 1;
+    int32 Id = 2;
+    bytes ArbitraryData = 3;
+}
+
+message ProtobufDataItem {
+    repeated ProtobufChildDataItem Children = 1;
+    string Secret = 2;
+}
