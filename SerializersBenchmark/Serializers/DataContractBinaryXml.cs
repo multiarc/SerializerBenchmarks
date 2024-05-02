@@ -6,41 +6,20 @@ namespace SerializersBenchmark.Serializers;
 
 public class DataContractBinaryXml<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
 {
-    private DataContractSerializer Formatter { get; } = new(typeof(T));
+    private DataContractSerializer Serializer { get; } = new(typeof(T));
 
-    protected override Action<MemoryStream> CustomSerialize
+    public override MemoryStream Serialize(object obj)
     {
-        get
-        {
-            return stream =>
-            {
-                var binaryWriter = XmlDictionaryWriter.CreateBinaryWriter(stream);
-                Formatter.WriteObject(binaryWriter, TestDataObject);
-                binaryWriter.Flush();
-            };
-        }
+        var stream = new MemoryStream();
+        var binaryWriter = XmlDictionaryWriter.CreateBinaryWriter(stream);
+        Serializer.WriteObject(binaryWriter, TestDataObject);
+        binaryWriter.Flush();
+        return stream;
     }
 
-    protected override Func<MemoryStream, T> CustomDeserialize
+    public override object Deserialize(MemoryStream stream)
     {
-        get
-        {
-            return stream =>
-            {
-                var binaryReader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max);
-                T deserialized = (T) Formatter.ReadObject(binaryReader);
-                return deserialized;
-            };
-        }
-    }
-
-    protected override void Serialize(T obj, MemoryStream stream)
-    {
-        throw new NotSupportedException();
-    }
-
-    protected override T Deserialize(MemoryStream stream)
-    {
-        throw new NotSupportedException();
+        var binaryReader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max);
+        return Serializer.ReadObject(binaryReader);
     }
 }

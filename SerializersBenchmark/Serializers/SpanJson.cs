@@ -6,14 +6,16 @@ namespace SerializersBenchmark.Serializers
 {
     public class SpanJson<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     {
-        protected override void Serialize(T obj, MemoryStream stream)
+        public override MemoryStream Serialize(object obj)
         {
-            stream.Write(JsonSerializer.Generic.Utf8.Serialize(obj)); 
+            var stream = new MemoryStream();
+            stream.Write(JsonSerializer.Generic.Utf8.Serialize(obj));
+            return stream;
         }
 
-        protected override T Deserialize(MemoryStream stream)
+        public override object Deserialize(MemoryStream stream)
         {
-            return JsonSerializer.Generic.Utf8.Deserialize<T>(stream.GetBuffer());
+            return JsonSerializer.Generic.Utf8.Deserialize<T>(stream.ToArray());
         }
     }
 }

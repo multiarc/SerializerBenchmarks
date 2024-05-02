@@ -6,15 +6,17 @@ namespace SerializersBenchmark.Serializers;
 public class GoogleProtobuf<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class, IMessage<T>, new()
 {
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
         var obj = new T();
         obj.MergeFrom(stream);
         return obj;
     }
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        obj.WriteTo(stream);
+        var stream = new MemoryStream();
+        ((T)obj).WriteTo(stream);
+        return stream;
     }
 }

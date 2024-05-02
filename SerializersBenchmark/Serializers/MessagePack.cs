@@ -6,12 +6,14 @@ namespace SerializersBenchmark.Serializers;
 public class MessagePack<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class
 {
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
+        var stream = new MemoryStream();
         MessagePackSerializer.Serialize(typeof(T), stream, obj);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
         return MessagePackSerializer.Deserialize<T>(stream);
     }

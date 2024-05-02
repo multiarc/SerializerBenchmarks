@@ -9,15 +9,17 @@ public class XmlSerializer<T> : TestBase<T>
     {
     }
 
-    private XmlSerializer Formatter { get; } = new(typeof(T));
+    private XmlSerializer Serializer { get; } = new(typeof(T));
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        Formatter.Serialize(stream, obj);
+        var stream = new MemoryStream();
+        Serializer.Serialize(stream, obj);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-        return (T)Formatter.Deserialize(stream);
+        return (T) Serializer.Deserialize(stream);
     }
 }

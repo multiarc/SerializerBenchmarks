@@ -7,17 +7,21 @@ namespace SerializersBenchmark.Serializers;
 public class GroBuf<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class
 {
-    private Serializer Formatter { get; } =
+    private Serializer Serializer { get; } =
         new(new AllFieldsExtractor(), options: GroBufOptions.WriteEmptyObjects);
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        var bytes = Formatter.Serialize(obj);
+        var stream = new MemoryStream();
+        //double copy due to streams not supported
+        var bytes = Serializer.Serialize(obj);
         stream.Write(bytes, 0, bytes.Length);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-        return Formatter.Deserialize<T>(stream.GetBuffer(), (int) stream.Length);
+        //double copy due to streams not supported
+        return Serializer.Deserialize<T>(stream.ToArray(), (int) stream.Length);
     }
 }

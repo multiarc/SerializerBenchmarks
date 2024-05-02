@@ -6,15 +6,17 @@ namespace SerializersBenchmark.Serializers;
 public class MsgPackCli<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class
 {
-    private MessagePackSerializer Formatter { get; } = MessagePackSerializer.Get<T>();
+    private MessagePackSerializer Serializer { get; } = MessagePackSerializer.Get<T>();
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        Formatter.Pack(stream, obj);
+        var stream = new MemoryStream();
+        Serializer.Pack(stream, obj);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-        return (T) Formatter.Unpack(stream);
+        return (T) Serializer.Unpack(stream);
     }
 }

@@ -29,4 +29,7 @@
         <PackageReference Include="SpanJson" Version="4.0.1" />
         <PackageReference Include="BinaryPack" Version="1.0.3" />
     </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+        <PackageReference Include="System.Text.Json" Version="8.0.3" />
+    </ItemGroup>
 </Project>

@@ -5,12 +5,14 @@ namespace SerializersBenchmark.Serializers;
 
 public class Utf8JsonSerializer<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
 {
-	protected override void Serialize(T obj, MemoryStream stream)
+	public override MemoryStream Serialize(object obj)
 	{
+		var stream = new MemoryStream();
 		JsonSerializer.Serialize(stream, obj);
+		return stream;
 	}
 
-	protected override T Deserialize(MemoryStream stream)
+	public override object Deserialize(MemoryStream stream)
 	{
 		return JsonSerializer.Deserialize<T>(stream);
 	}

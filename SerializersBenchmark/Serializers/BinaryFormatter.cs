@@ -6,17 +6,19 @@ namespace SerializersBenchmark.Serializers;
 public class BinaryFormatter<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class
 {
-    private BinaryFormatter Formatter { get; } = new();
+    private BinaryFormatter Serializer { get; } = new();
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-            Formatter.Serialize(stream, obj);
-        }
+        var result = new MemoryStream();
+        Serializer.Serialize(result, obj);
+        return result;
+    }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-            return (T)Formatter.Deserialize(stream);
-        }
+        return Serializer.Deserialize(stream);
+    }
 }
 
 #pragma warning restore SYSLIB0011 // Type or member is obsolete

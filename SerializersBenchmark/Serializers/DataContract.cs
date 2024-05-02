@@ -5,15 +5,17 @@ namespace SerializersBenchmark.Serializers;
 
 public class DataContract<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
 {
-    private DataContractSerializer Formatter { get; } = new(typeof(T));
+    private DataContractSerializer Serializer { get; } = new(typeof(T));
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        Formatter.WriteObject(stream, obj);
+        var stream = new MemoryStream();
+        Serializer.WriteObject(stream, obj);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-        return (T)Formatter.ReadObject(stream);
+        return (T) Serializer.ReadObject(stream);
     }
 }

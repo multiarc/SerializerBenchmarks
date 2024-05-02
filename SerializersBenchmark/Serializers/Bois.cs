@@ -5,15 +5,17 @@ namespace SerializersBenchmark.Serializers;
 
 public class Bois<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
 {
-    private BoisSerializer Formatter { get; } = new();
+    private BoisSerializer Serializer { get; } = new();
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-            Formatter.Serialize(obj, stream);
-        }
+        var stream = new MemoryStream();
+        Serializer.Serialize(obj, stream);
+        return stream;
+    }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-            return Formatter.Deserialize<T>(stream);
-        }
+        return Serializer.Deserialize<T>(stream);
+    }
 }

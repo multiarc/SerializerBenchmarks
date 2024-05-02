@@ -8,16 +8,18 @@ namespace SerializersBenchmark.Serializers
     public class MemoryPack<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
         where T : class
     {
-        protected override void Serialize(T obj, MemoryStream stream)
+        public override MemoryStream Serialize(object obj)
         {
+            var stream = new MemoryStream();
             var writer = new ArrayBufferWriter<byte>();
             MemoryPackSerializer.Serialize(writer, obj, options: null);
             stream.Write(writer.GetMemory().Span);
+            return stream;
         }
 
-        protected override T Deserialize(MemoryStream stream)
+        public override object Deserialize(MemoryStream stream)
         {
-            return MemoryPackSerializer.Deserialize<T>(stream.GetBuffer());
+            return MemoryPackSerializer.Deserialize<T>(stream.ToArray());
         }
     }
 }

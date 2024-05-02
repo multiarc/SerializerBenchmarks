@@ -6,15 +6,17 @@ namespace SerializersBenchmark.Serializers;
 public class ProtobufNet<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrategy)
     where T : class
 {
-    private RuntimeTypeModel Formatter { get; } = RuntimeTypeModel.Create(); 
+    private RuntimeTypeModel Serializer { get; } = RuntimeTypeModel.Create();
 
-    protected override void Serialize(T obj, MemoryStream stream)
+    public override MemoryStream Serialize(object obj)
     {
-        Formatter.Serialize(stream, obj);
+        var stream = new MemoryStream();
+        Serializer.Serialize(stream, obj);
+        return stream;
     }
 
-    protected override T Deserialize(MemoryStream stream)
+    public override object Deserialize(MemoryStream stream)
     {
-        return (T)Formatter.Deserialize(stream, null, typeof(T));
+        return Serializer.Deserialize(stream, null, typeof(T));
     }
 }

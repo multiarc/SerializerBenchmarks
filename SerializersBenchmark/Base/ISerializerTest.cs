@@ -2,7 +2,8 @@
 
 public interface ISerializerTest
 {
-    void Serialize();
-    object Deserialize();
-    void Setup(int numberOfObjects);
+    MemoryStream Serialize(object value);
+    object Deserialize(MemoryStream stream);
+    MemoryStream Setup(int numberOfObjects);
+    object TestDataObject { get; }
 }
