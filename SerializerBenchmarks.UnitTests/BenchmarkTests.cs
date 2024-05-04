@@ -6,10 +6,10 @@ using Xunit;
 namespace SerializerBenchmarks.UnitTests;
 
 
-//[Collection("SocketBasedTests")]
+[Collection("SocketBasedTests")]
 public class BenchmarkTests: IDisposable
 {
-    private static int _portNumber = 47000;
+    private static int _portNumber = 37000;
 
     private static int GetNextPort()
     {
