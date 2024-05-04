@@ -302,6 +302,11 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
+      "Microsoft.NETCore.Platforms": {
+        "type": "Transitive",
+        "resolved": "1.1.0",
+        "contentHash": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
+      },
       "Microsoft.TestPlatform.ObjectModel": {
         "type": "Transitive",
         "resolved": "17.9.0",
@@ -328,6 +333,14 @@
         "type": "Transitive",
         "resolved": "1.0.1",
         "contentHash": "od0WujAAuPuRLoGfGNfE2iRPP7Kj+o174Oed2uirT03/Dp4rkccnEIqQl/QRHjly79sMwh6xKaIVsLqYwWtiHA=="
+      },
+      "NETStandard.Library": {
+        "type": "Transitive",
+        "resolved": "2.0.3",
+        "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
@@ -590,6 +603,7 @@
           "MemoryPack": "[1.21.1, )",
           "MessagePack": "[2.5.140, )",
           "MsgPack.Cli": "[1.0.1, )",
+          "NETStandard.Library": "[2.0.3, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "Salar.Bois": "[3.4.0, )",
           "Salar.Bois.LZ4": "[3.4.0, )",
@@ -955,6 +969,14 @@
           "System.Numerics.Vectors": "4.3.0",
           "System.Reflection.Emit": "4.3.0",
           "System.Reflection.Emit.LightWeight": "4.3.0"
+        }
+      },
+      "NETStandard.Library": {
+        "type": "Transitive",
+        "resolved": "2.0.3",
+        "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
       "Newtonsoft.Json": {
@@ -1331,6 +1353,7 @@
           "MemoryPack": "[1.21.1, )",
           "MessagePack": "[2.5.140, )",
           "MsgPack.Cli": "[1.0.1, )",
+          "NETStandard.Library": "[2.0.3, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "Salar.Bois": "[3.4.0, )",
           "Salar.Bois.LZ4": "[3.4.0, )",
@@ -1688,6 +1711,14 @@
           "System.Numerics.Vectors": "4.3.0",
           "System.Reflection.Emit": "4.3.0",
           "System.Reflection.Emit.LightWeight": "4.3.0"
+        }
+      },
+      "NETStandard.Library": {
+        "type": "Transitive",
+        "resolved": "2.0.3",
+        "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
       "Newtonsoft.Json": {
@@ -2058,6 +2089,7 @@
           "MemoryPack": "[1.21.1, )",
           "MessagePack": "[2.5.140, )",
           "MsgPack.Cli": "[1.0.1, )",
+          "NETStandard.Library": "[2.0.3, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "Salar.Bois": "[3.4.0, )",
           "Salar.Bois.LZ4": "[3.4.0, )",

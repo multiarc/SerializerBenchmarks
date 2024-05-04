@@ -5,8 +5,18 @@ using Xunit;
 
 namespace SerializerBenchmarks.UnitTests;
 
+
+//[Collection("SocketBasedTests")]
 public class BenchmarkTests: IDisposable
 {
+    private static int _portNumber = 47000;
+
+    private static int GetNextPort()
+    {
+        Interlocked.Increment(ref _portNumber);
+        return _portNumber;
+    }
+    
     private readonly Benchmarks _benchmark = new()
     {
         N = 1
@@ -16,8 +26,8 @@ public class BenchmarkTests: IDisposable
     public async Task SetupTest()
     {
         _benchmark.SerializerType = typeof(MessagePack<DataItem>);
-        _benchmark.BlackHolePort = 47000;
-        _benchmark.WhiteHolePort = 47001;
+        _benchmark.BlackHolePort = GetNextPort();
+        _benchmark.WhiteHolePort = GetNextPort();
         await _benchmark.SetupAsync();
         Assert.NotNull(_benchmark.SerializerTest);
         Assert.NotNull(_benchmark.SerializedValue);
@@ -54,8 +64,8 @@ public class BenchmarkTests: IDisposable
     public async Task SerializeAsyncTest(Type serializerType)
     {
         _benchmark.SerializerType = serializerType;
-        _benchmark.BlackHolePort = 47002;
-        _benchmark.WhiteHolePort = 47003;
+        _benchmark.BlackHolePort = GetNextPort();
+        _benchmark.WhiteHolePort = GetNextPort();
         await _benchmark.SetupAsync();
         await _benchmark.SerializeAsync();
     }
@@ -90,8 +100,8 @@ public class BenchmarkTests: IDisposable
     public async Task DeserializeAsyncTest(Type serializerType)
     {
         _benchmark.SerializerType = serializerType;
-        _benchmark.BlackHolePort = 47004;
-        _benchmark.WhiteHolePort = 47005;
+        _benchmark.BlackHolePort = GetNextPort();
+        _benchmark.WhiteHolePort = GetNextPort();
         await _benchmark.SetupAsync();
         await _benchmark.DeserializeAsync();
     }
@@ -126,8 +136,8 @@ public class BenchmarkTests: IDisposable
     public async Task SerializeTest(Type serializerType)
     {
         _benchmark.SerializerType = serializerType;
-        _benchmark.BlackHolePort = 47006;
-        _benchmark.WhiteHolePort = 47007;
+        _benchmark.BlackHolePort = GetNextPort();
+        _benchmark.WhiteHolePort = GetNextPort();
         await _benchmark.SetupAsync();
         var stream = _benchmark.Serialize();
         Assert.NotNull(stream);
@@ -164,8 +174,8 @@ public class BenchmarkTests: IDisposable
     public async Task DeserializeTest(Type serializerType)
     {
         _benchmark.SerializerType = serializerType;
-        _benchmark.BlackHolePort = 47008;
-        _benchmark.WhiteHolePort = 47009;
+        _benchmark.BlackHolePort = GetNextPort();
+        _benchmark.WhiteHolePort = GetNextPort();
         await _benchmark.SetupAsync();
         var value = _benchmark.Deserialize();
         Assert.NotNull(value);
