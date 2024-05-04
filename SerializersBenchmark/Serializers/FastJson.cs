@@ -20,4 +20,6 @@ public class FastJson<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataSt
         var reader = new StreamReader(stream, Encoding.UTF8);
         return fastJSON.JSON.ToObject<T>(reader.ReadToEnd());
     }
+    
+    //no actual async implementation exists, using default
 }

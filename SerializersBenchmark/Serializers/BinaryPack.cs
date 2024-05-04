@@ -9,7 +9,7 @@ namespace SerializersBenchmark.Serializers
     {
         public override MemoryStream Serialize(object obj)
         {
-             var stream = new MemoryStream();
+            var stream = new MemoryStream();
             BinaryConverter.Serialize((T)obj, stream);
             return stream;
         }
@@ -18,6 +18,8 @@ namespace SerializersBenchmark.Serializers
         {
             return BinaryConverter.Deserialize<T>(stream);
         }
+        
+        //no actual async implementation exists, using default
     }
 }
 #endif

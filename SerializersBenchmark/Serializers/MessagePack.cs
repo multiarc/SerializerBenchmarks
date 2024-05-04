@@ -17,4 +17,13 @@ public class MessagePack<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDat
     {
         return MessagePackSerializer.Deserialize<T>(stream);
     }
+
+    public override async Task SerializeAsync(object obj, Stream stream)
+    {
+        await MessagePackSerializer.SerializeAsync(stream, (T) obj);
+    }
+    public override async Task<object> DeserializeAsync(Stream stream)
+    {
+        return await MessagePackSerializer.DeserializeAsync<T>(stream);
+    }
 }

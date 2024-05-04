@@ -14,7 +14,7 @@ public class GroBuf<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStra
     {
         var stream = new MemoryStream();
         //double copy due to streams not supported
-        var bytes = Serializer.Serialize(obj);
+        var bytes = Serializer.Serialize((T)obj);
         stream.Write(bytes, 0, bytes.Length);
         return stream;
     }
@@ -24,4 +24,6 @@ public class GroBuf<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStra
         //double copy due to streams not supported
         return Serializer.Deserialize<T>(stream.ToArray(), (int) stream.Length);
     }
+    
+    //no actual async implementation exists, using default
 }

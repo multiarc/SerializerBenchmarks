@@ -10,13 +10,23 @@ namespace SerializersBenchmark.Serializers
         public override MemoryStream Serialize(object obj)
         {
             var stream = new MemoryStream();
-            JsonSerializer.Serialize(stream, obj, _serializerOptions);
+            JsonSerializer.Serialize(stream, (T)obj, _serializerOptions);
             return stream;
         }
 
         public override object Deserialize(MemoryStream stream)
         {
-            return (T) JsonSerializer.Deserialize(stream, typeof(T), _serializerOptions);
+            return JsonSerializer.Deserialize<T>(stream, _serializerOptions);
+        }
+
+        public override async Task SerializeAsync(object obj, Stream stream)
+        {
+            await JsonSerializer.SerializeAsync(stream, (T)obj, _serializerOptions);
+        }
+
+        public override async Task<object> DeserializeAsync(Stream stream)
+        {
+            return await JsonSerializer.DeserializeAsync<T>(stream, _serializerOptions);
         }
     }
 }

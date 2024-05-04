@@ -9,7 +9,7 @@ public class Jil<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrateg
     {
         var stream = new MemoryStream();
         var text = new StreamWriter(stream);
-        Jil.JSON.Serialize(obj, text);
+        Jil.JSON.Serialize((T)obj, text);
         text.Flush();
         return stream;
     }
@@ -19,4 +19,6 @@ public class Jil<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrateg
         TextReader text = new StreamReader(stream);
         return Jil.JSON.Deserialize<T>(text);
     }
+    
+    //no actual async implementation exists, using default
 }

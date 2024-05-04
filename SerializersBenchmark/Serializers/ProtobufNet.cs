@@ -19,4 +19,6 @@ public class ProtobufNet<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDat
     {
         return Serializer.Deserialize(stream, null, typeof(T));
     }
+    
+    //no actual async implementation exists, using default
 }

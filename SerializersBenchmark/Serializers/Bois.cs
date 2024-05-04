@@ -18,4 +18,6 @@ public class Bois<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrate
     {
         return Serializer.Deserialize<T>(stream);
     }
+    
+    //no actual async implementation exists, using default
 }

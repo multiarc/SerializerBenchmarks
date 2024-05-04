@@ -21,6 +21,16 @@ namespace SerializersBenchmark.Serializers
         {
             return MemoryPackSerializer.Deserialize<T>(stream.ToArray());
         }
+
+        public override async Task SerializeAsync(object obj, Stream stream)
+        {
+            await MemoryPackSerializer.SerializeAsync(stream, (T)obj, options: null);
+        }
+
+        public override async Task<object> DeserializeAsync(Stream stream)
+        {
+            return await MemoryPackSerializer.DeserializeAsync<T>(stream, options: null);
+        }
     }
 }
 #endif

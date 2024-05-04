@@ -19,4 +19,6 @@ public class BoisLz4<T>(Func<int, T> testData) : TestBase<T>(testData)
     {
         return Serializer.Unpickle<T>(stream);
     }
+    
+    //no actual async implementation exists, using default
 }

@@ -25,4 +25,6 @@ public class NewtonsoftJson<T>(Func<int, T> testDataStrategy) : TestBase<T>(test
             detectEncodingFromByteOrderMarks: false, leaveOpen: true);
         return (T) Serializer.Deserialize(reader, typeof(T));
     }
+    
+    //no actual async implementation exists, using default
 }

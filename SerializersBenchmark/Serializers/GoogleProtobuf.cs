@@ -19,4 +19,6 @@ public class GoogleProtobuf<T>(Func<int, T> testDataStrategy) : TestBase<T>(test
         ((T)obj).WriteTo(stream);
         return stream;
     }
+    
+    //no actual async implementation exists, using default
 }

@@ -19,4 +19,16 @@ public class MsgPackCli<T>(Func<int, T> testDataStrategy) : TestBase<T>(testData
     {
         return (T) Serializer.Unpack(stream);
     }
+
+    public override async Task SerializeAsync(object obj, Stream stream)
+    {
+        var packer = MsgPack.Packer.Create(stream);
+        await Serializer.PackToAsync(packer, obj, CancellationToken.None);
+    }
+
+    public override async Task<object> DeserializeAsync(Stream stream)
+    {
+        var unpacker = MsgPack.Unpacker.Create(stream);
+        return await Serializer.UnpackFromAsync(unpacker, CancellationToken.None);
+    }
 }
