@@ -10,7 +10,7 @@ public class Bois<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrate
     public override MemoryStream Serialize(object obj)
     {
         var stream = new MemoryStream();
-        Serializer.Serialize(obj, stream);
+        Serializer.Serialize((T)obj, stream);
         return stream;
     }
 

@@ -10,7 +10,7 @@ namespace SerializersBenchmark.Serializers
         public override MemoryStream Serialize(object obj)
         {
              var stream = new MemoryStream();
-            BinaryConverter.Serialize(obj, stream);
+            BinaryConverter.Serialize((T)obj, stream);
             return stream;
         }
 

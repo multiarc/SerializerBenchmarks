@@ -1,7 +1,9 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Runtime.CompilerServices;
+using BenchmarkDotNet.Attributes;
 using SerializersBenchmark.Base;
 using SerializersBenchmark.Models;
 using SerializersBenchmark.Serializers;
+[assembly:InternalsVisibleTo("SerializerBenchmarks.UnitTests")]
 
 namespace SerializersBenchmark;
 
@@ -10,7 +12,7 @@ namespace SerializersBenchmark;
 [ExceptionDiagnoser]
 public class Benchmarks
 {
-    [Params(1, 10, 100, 500, 1000, 10_000, 50_000, 100_000, 200_000, 500_000, 800_000, 1_000_000)]
+    [Params(1, 100, 10_000, 100_000, 1_000_000)]
     public int N { get; set; }
 
     [Params(
@@ -30,7 +32,6 @@ public class Benchmarks
         typeof(XmlSerializer<DataItem>),
         typeof(NewtonsoftJson<DataItem>),
         typeof(MsgPackCli<DataItem>),
-        typeof(BinaryFormatter<DataItem>),
         typeof(SystemTextJson<DataItem>)
 #if (NET6_0_OR_GREATER)
         ,typeof(MemoryPack<DataItem>),
@@ -40,9 +41,15 @@ public class Benchmarks
 #if NET8_0
         ,typeof(SystemTextJsonSourceGen<DataItem>)
 #endif
+#if NET48
+        ,typeof(BinaryFormatter<DataItem>)
+#endif
     )]
     public Type SerializerType { get; set; }
 
+    internal ISerializerTest SerializerTest => _serializer;
+    internal MemoryStream SerializedValue => _serializedValue;
+    
     private ISerializerTest _serializer;
     private MemoryStream _serializedValue;
     
@@ -63,21 +70,23 @@ public class Benchmarks
     }
 
     [Benchmark]
-    public void TestSerialize()
+    public MemoryStream TestSerialize()
     {
-        _serializer.Serialize(_serializer.TestDataObject);
+        return _serializer.Serialize(_serializer.TestDataObject);
     }
 
     [Benchmark]
     public object TestDeserialize()
     {
+        _serializedValue.Position = 0;
         return _serializer.Deserialize(_serializedValue);
     }
     
     [Benchmark]
     public object EndToEnd()
     {
-        _serializer.Serialize(_serializer.TestDataObject);
-        return _serializer.Deserialize(_serializedValue);
+        var serializedValue = _serializer.Serialize(_serializer.TestDataObject);
+        serializedValue.Position = 0;
+        return _serializer.Deserialize(serializedValue);
     }
 }
