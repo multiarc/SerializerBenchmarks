@@ -105,6 +105,6 @@ jobs:
         run: dotnet build --no-restore -f net8.0
       - name: Execute
         working-directory: ./SerializersBenchmark
-        run: dotnet run -c Release -f net8.0 -- --runtimes net6.0 net8.0 --filter *
+        run: dotnet run -c Release -f net8.0 -- --runtimes net6.0 net8.0 --filter *Benchmarks*
 
 #TODO process results
