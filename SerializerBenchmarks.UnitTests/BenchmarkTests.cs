@@ -9,7 +9,7 @@ namespace SerializerBenchmarks.UnitTests;
 [Collection("SocketBasedTests")]
 public class BenchmarkTests: IDisposable
 {
-    private static int _portNumber = 37000;
+    private static int _portNumber = 27000;
 
     private static int GetNextPort()
     {
