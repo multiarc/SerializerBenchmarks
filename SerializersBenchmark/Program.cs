@@ -6,6 +6,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        BenchmarkRunner.Run<Benchmarks>();
+        //dotnet run -c Release -f net8.0 -- --runtimes net48 net6.0 net8.0 --filter *
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
     }
 }
