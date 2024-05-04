@@ -56,10 +56,10 @@ jobs:
     - name: Test .NET 8.0
       run: dotnet test --no-build --verbosity normal -f net8.0
       
-  benchmark-windows:
+  benchmark-windows-net48:
 
     runs-on: windows-latest
-    timeout-minutes: 420 #7 hours
+    timeout-minutes: 320 #6 hours
     needs: build-windows
     if: ${{ github.ref == 'refs/heads/main' }}
 
@@ -77,9 +77,77 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: Execute
+      - name: Execute .NET Framework 4.8
         working-directory: ./SerializersBenchmark
-        run: dotnet run -c Release -f net8.0 -- --runtimes net48 net6.0 net8.0 --filter *
+        run: dotnet run -c Release -f net48 -- --runtimes net48 --filter *
+      - name: Publish Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: net48
+          path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
+          compression-level: 9
+          
+  benchmark-windows-net6:
+
+    runs-on: windows-latest
+    timeout-minutes: 320 #6 hours
+    needs: build-windows
+    if: ${{ github.ref == 'refs/heads/main' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Execute .NET 6
+        working-directory: ./SerializersBenchmark
+        run: dotnet run -c Release -f net6.0 -- --runtimes net6.0 --filter *
+      - name: Publish Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: net6
+          path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
+          compression-level: 9
+          
+  benchmark-windows-net8:
+
+    runs-on: windows-latest
+    timeout-minutes: 360 #6 hours
+    needs: build-windows
+    if: ${{ github.ref == 'refs/heads/main' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Execute .NET 8
+        working-directory: ./SerializersBenchmark
+        run: dotnet run -c Release -f net8.0 -- --runtimes net8.0 --filter *
+      - name: Publish Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: net8
+          path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
+          compression-level: 9
         
 #TODO process results
         
