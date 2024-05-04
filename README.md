@@ -3,6 +3,8 @@
 
 The project compiles to .NET 8, .NET 6 and .NET 4.8
 
+![build](https://github.com/multiarc/SerializerBenchmarks/actions/workflows/dotnet.yml/badge.svg)
+
 Implemented benchmarks for the following serializers:
 - System.Runtime.Serialization.DataContract
 - System.Text.JsonSerializer
