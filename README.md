@@ -27,5 +27,4 @@ Implemented benchmarks for the following serializers:
 - UTF8Json (https://github.com/neuecc/Utf8Json)
 
 #### Legacy Serializers
-- ZeroFormatter
 - BinaryFormatter
