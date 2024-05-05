@@ -19,7 +19,7 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
 
     public void SpawnNext(Queue<byte[]> value)
     {
-        _dataIsReady.SetResult(value);
+        _dataIsReady.TrySetResult(value);
     }
 
     protected override async Task OnClientConnected(TcpClient client)
