@@ -35,8 +35,8 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
                 {
                     var data = queue.Dequeue();
                     await stream.WriteAsync(data, 0, data.Length);
-                    await stream.FlushAsync();
                 }
+                await stream.FlushAsync();
             }
         }
         catch when (TeardownStarted)
