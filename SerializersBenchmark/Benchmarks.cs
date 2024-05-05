@@ -79,7 +79,6 @@ public class Benchmarks
         _serializedValue = _serializer!.Setup(N);
         _serializedArray = _serializedValue.ToArray();
         
-        var blackHole = new BlackHoleServer(BlackHolePort);
         _whiteHole = CreateWhiteHole();
         _blackHole = CreateBlackHole();
         
