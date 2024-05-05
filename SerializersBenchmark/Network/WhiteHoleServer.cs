@@ -8,14 +8,14 @@ namespace SerializersBenchmark.Network;
 /// </summary>
 public class WhiteHoleServer : TcpServer, IWhiteHole
 {
-    private TaskCompletionSource<byte[]> _dataIsReady;
+    private TaskCompletionSource<Queue<byte[]>> _dataIsReady;
 
     public WhiteHoleServer(int port) : base(port)
     {
         ResetState();
     }
 
-    public void SpawnNext(byte[] value)
+    public void SpawnNext(Queue<byte[]> value)
     {
         _dataIsReady.SetResult(value);
     }
@@ -28,11 +28,15 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
         {
             while (true)
             {
-                var data = await _dataIsReady.Task;
+                var queue = await _dataIsReady.Task;
                 ResetState();
 
-                await stream.WriteAsync(data, 0, data.Length);
-                await stream.FlushAsync();
+                while (queue.Count > 0)
+                {
+                    var data = queue.Dequeue();
+                    await stream.WriteAsync(data, 0, data.Length);
+                    await stream.FlushAsync();
+                }
             }
         }
         catch when (TeardownStarted)
@@ -43,7 +47,7 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
 
     private void ResetState()
     {
-        _dataIsReady = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _dataIsReady = new TaskCompletionSource<Queue<byte[]>>(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
     protected override void Dispose(bool disposing)

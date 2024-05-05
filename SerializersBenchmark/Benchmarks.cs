@@ -2,8 +2,6 @@
 using BenchmarkDotNet.Attributes;
 using SerializersBenchmark.Base;
 using SerializersBenchmark.Models;
-using SerializersBenchmark.Network;
-using SerializersBenchmark.Network.Abstractions;
 using SerializersBenchmark.Serializers;
 [assembly:InternalsVisibleTo("SerializerBenchmarks.UnitTests")]
 
@@ -15,9 +13,6 @@ namespace SerializersBenchmark;
 [SimpleJob]
 public class Benchmarks
 {
-    internal int BlackHolePort { get; set; } = 27001;
-    internal int WhiteHolePort { get; set; } = 27000;
-    
     [Params(1, 100, 10_000, 200_000)]
     public int N { get; set; }
 
@@ -56,15 +51,10 @@ public class Benchmarks
     
     private ISerializerTestAsync _serializer;
     private MemoryStream _serializedValue;
-    private byte[] _serializedArray;
-    private IWhiteHole _whiteHole;
-    private IBlackHole _blackHole;
-    private IRabbit _rabbitToSerialize;
-    private IRabbit _rabbitToDeserialize;
     
     
     [GlobalSetup]
-    public async Task SetupAsync()
+    public void Setup()
     {
         if (SerializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
         {
@@ -77,64 +67,6 @@ public class Benchmarks
                 (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
         }
         _serializedValue = _serializer!.Setup(N);
-        _serializedArray = _serializedValue.ToArray();
-        
-        _whiteHole = CreateWhiteHole();
-        _blackHole = CreateBlackHole();
-        
-        //allow servers to spin up before connecting
-        await Task.Delay(100);
-        
-        var rabbitToDeserialize = new Rabbit(_serializer, WhiteHolePort);
-        var rabbitToSerialize = new Rabbit(_serializer, BlackHolePort);
-        await rabbitToSerialize.ConnectAsync();
-        await rabbitToDeserialize.ConnectAsync();
-        
-        _rabbitToSerialize = rabbitToSerialize;
-        _rabbitToDeserialize = rabbitToDeserialize;
-    }
-
-    private IWhiteHole CreateWhiteHole()
-    {
-        while (true)
-        {
-            try
-            {
-                var whiteHole = new WhiteHoleServer(WhiteHolePort);
-                whiteHole.Start();
-                return whiteHole;
-            }
-            catch
-            {
-                WhiteHolePort++;
-            }
-        }
-    }
-    
-    private IBlackHole CreateBlackHole()
-    {
-        while (true)
-        {
-            try
-            {
-                var blackHole = new BlackHoleServer(BlackHolePort);
-                blackHole.Start();
-                return blackHole;
-            }
-            catch
-            {
-                BlackHolePort++;
-            }
-        }
-    }
-
-    [GlobalCleanup]
-    public void Cleanup()
-    {
-        _rabbitToDeserialize.Dispose();
-        _rabbitToSerialize.Dispose();
-        _whiteHole.Dispose();
-        _blackHole.Dispose();
     }
 
     [Benchmark]
@@ -148,18 +80,5 @@ public class Benchmarks
     {
         _serializedValue.Position = 0;
         return _serializer.Deserialize(_serializedValue);
-    }
-
-    [Benchmark]
-    public async Task SerializeAsync()
-    {
-        await _rabbitToSerialize.SendAsync(_serializer.TestDataObject);
-    }
-
-    [Benchmark]
-    public async Task DeserializeAsync()
-    {
-        _whiteHole.SpawnNext(_serializedArray);
-        await _rabbitToDeserialize.ReceiveAsync(_serializedArray.Length);
     }
 }

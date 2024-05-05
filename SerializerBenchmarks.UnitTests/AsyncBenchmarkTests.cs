@@ -5,23 +5,24 @@ using Xunit;
 
 namespace SerializerBenchmarks.UnitTests;
 
-public class BenchmarkTests
+public sealed class AsyncBenchmarkTests : IDisposable
 {
-    [Fact]
-    public void SetupTest()
+    private static int _portNumber = 27003;
+    private static int GetNextPort()
     {
-        Benchmarks benchmark = new()
-        {
-            N = 1,
-            SerializerType = typeof(MessagePack<DataItem>)
-        };
-        benchmark.Setup();
-        Assert.NotNull(benchmark.SerializerTest);
-        Assert.NotNull(benchmark.SerializedValue);
-        Assert.NotEqual(0, benchmark.SerializedValue.Length);
+        Interlocked.Increment(ref _portNumber);
+        return _portNumber;
     }
 
-    [Theory]
+    private readonly AsyncBenchmarks _benchmark = new()
+    {
+        N = 1,
+        QueueLength = 7,
+        BlackHolePort = GetNextPort(),
+        WhiteHolePort = GetNextPort()
+    };
+
+    [Theory(Timeout = 1000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -48,20 +49,14 @@ public class BenchmarkTests
 #if NET48
     [InlineData(typeof(BinaryFormatter<DataItem>))]
 #endif
-    public void SerializeTest(Type serializerType)
+    public async Task SerializeAsyncTest(Type serializerType)
     {
-        Benchmarks benchmark = new()
-        {
-            N = 1,
-            SerializerType = serializerType,
-        };
-        benchmark.Setup();
-        var stream = benchmark.Serialize();
-        Assert.NotNull(stream);
-        Assert.NotEqual(0, stream.Length);
+        _benchmark.SerializerType = serializerType;
+        await _benchmark.SetupAsync();
+        await _benchmark.SerializeAsync();
     }
-
-    [Theory]
+    
+    [Theory(Timeout = 1000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -88,15 +83,15 @@ public class BenchmarkTests
 #if NET48
     [InlineData(typeof(BinaryFormatter<DataItem>))]
 #endif
-    public void DeserializeTest(Type serializerType)
+    public async Task DeserializeAsyncTest(Type serializerType)
     {
-        Benchmarks benchmark = new()
-        {
-            N = 1,
-            SerializerType = serializerType,
-        };
-        benchmark.Setup();
-        var value = benchmark.Deserialize();
-        Assert.NotNull(value);
+        _benchmark.SerializerType = serializerType;
+        await _benchmark.SetupAsync();
+        await _benchmark.DeserializeAsync();
+    }
+    
+    public void Dispose()
+    {
+        _benchmark.Cleanup();
     }
 }

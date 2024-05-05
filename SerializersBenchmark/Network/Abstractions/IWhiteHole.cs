@@ -2,5 +2,5 @@
 
 public interface IWhiteHole : IDisposable
 {
-    void SpawnNext(byte[] value);
+    void SpawnNext(Queue<byte[]> value);
 }
