@@ -23,7 +23,7 @@ public sealed class Rabbit(ISerializerTestAsync serializer, int port, bool useBu
             stream = new BufferedStream(stream);
         }
 
-        for (var i = 1; i < repeatCount; i++)
+        for (var i = 0; i < repeatCount; i++)
         {
             await serializer.SerializeAsync(value, stream).ConfigureAwait(false);
         }
