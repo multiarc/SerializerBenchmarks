@@ -8,10 +8,12 @@ namespace SerializersBenchmark.Network;
 /// </summary>
 public class WhiteHoleServer : TcpServer, IWhiteHole
 {
+    private readonly bool _useBufferedStream;
     private TaskCompletionSource<Queue<byte[]>> _dataIsReady;
 
-    public WhiteHoleServer(int port) : base(port)
+    public WhiteHoleServer(int port, bool useBufferedStream = false) : base(port)
     {
+        _useBufferedStream = useBufferedStream;
         ResetState();
     }
 
@@ -22,7 +24,8 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
 
     protected override async Task OnClientConnected(TcpClient client)
     {
-        using var stream = client.GetStream();
+        using Stream networkStream = client.GetStream();
+        var stream = _useBufferedStream ? new BufferedStream(networkStream) : networkStream;
 
         try
         {
@@ -48,14 +51,5 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
     private void ResetState()
     {
         _dataIsReady = new TaskCompletionSource<Queue<byte[]>>(TaskCreationOptions.RunContinuationsAsynchronously);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        if (disposing)
-        {
-            _dataIsReady.SetResult(null);
-        }
     }
 }

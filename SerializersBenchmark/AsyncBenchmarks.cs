@@ -19,6 +19,9 @@ public class AsyncBenchmarks
     [Params(100)]
     public int N { get; set; }
     
+    [Params(true, false)]
+    public bool UseBuffer { get; set; }
+    
     [Params(1, 2, 4, 8, 16, 32, 64)]
     public int QueueLength { get; set; }
 
@@ -86,8 +89,8 @@ public class AsyncBenchmarks
         //allow servers to spin up before connecting
         await Task.Delay(100);
         
-        var rabbitToDeserialize = new Rabbit(_serializer, WhiteHolePort);
-        var rabbitToSerialize = new Rabbit(_serializer, BlackHolePort);
+        var rabbitToDeserialize = new Rabbit(_serializer, WhiteHolePort, UseBuffer);
+        var rabbitToSerialize = new Rabbit(_serializer, BlackHolePort, UseBuffer);
         await rabbitToSerialize.ConnectAsync();
         await rabbitToDeserialize.ConnectAsync();
         
@@ -109,7 +112,7 @@ public class AsyncBenchmarks
         {
             try
             {
-                var whiteHole = new WhiteHoleServer(WhiteHolePort);
+                var whiteHole = new WhiteHoleServer(WhiteHolePort, UseBuffer);
                 whiteHole.Start();
                 return whiteHole;
             }
@@ -149,7 +152,7 @@ public class AsyncBenchmarks
     [Benchmark]
     public async Task SerializeAsync()
     {
-        await _rabbitToSerialize.SendAsync(_serializer.TestDataObject);
+        await _rabbitToSerialize.SendAsync(_serializer.TestDataObject, QueueLength);
     }
 
     [Benchmark]

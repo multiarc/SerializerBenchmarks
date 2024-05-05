@@ -4,7 +4,7 @@ using SerializersBenchmark.Network.Abstractions;
 
 namespace SerializersBenchmark.Network;
 
-public sealed class Rabbit(ISerializerTestAsync serializer, int port) : IRabbit, ITcpClient
+public sealed class Rabbit(ISerializerTestAsync serializer, int port, bool useBufferedStream = false) : IRabbit, ITcpClient
 {
     private readonly TcpClient _tcpClient = new();
     private NetworkStream _networkStream;
@@ -14,16 +14,31 @@ public sealed class Rabbit(ISerializerTestAsync serializer, int port) : IRabbit,
         await _tcpClient.ConnectAsync("127.0.0.1", port);
         _networkStream = _tcpClient.GetStream();
     }
-    
-    public async Task SendAsync(object value)
+
+    public async Task SendAsync(object value, int repeatCount)
     {
-        await serializer.SerializeAsync(value, _networkStream).ConfigureAwait(false);
-        await _networkStream.FlushAsync();
+        Stream stream = _networkStream;
+        if (useBufferedStream)
+        {
+            stream = new BufferedStream(stream);
+        }
+
+        for (var i = 1; i < repeatCount; i++)
+        {
+            await serializer.SerializeAsync(value, stream).ConfigureAwait(false);
+        }
+
+        await _networkStream.FlushAsync().ConfigureAwait(false);
     }
 
     public async Task<object> ReceiveAsync(int expectedSize)
     {
-        return await serializer.DeserializeAsync(new LimitedStreamReader(_networkStream, expectedSize)).ConfigureAwait(false);
+        Stream stream = new LimitedStreamReader(_networkStream, expectedSize);
+        if (useBufferedStream)
+        {
+            stream = new BufferedStream(stream);
+        }
+        return await serializer.DeserializeAsync(stream).ConfigureAwait(false);
     }
 
     public void Dispose()
