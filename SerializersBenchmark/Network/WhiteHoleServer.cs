@@ -52,4 +52,13 @@ public class WhiteHoleServer : TcpServer, IWhiteHole
     {
         _dataIsReady = new TaskCompletionSource<Queue<byte[]>>(TaskCreationOptions.RunContinuationsAsynchronously);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (disposing)
+        {
+            _dataIsReady.TrySetResult(null);
+        }
+    }
 }
