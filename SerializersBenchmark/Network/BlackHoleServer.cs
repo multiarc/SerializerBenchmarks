@@ -17,40 +17,25 @@ public class BlackHoleServer(int port) : TcpServer(port), IBlackHole
 
         try
         {
-            while (true)
-            {
-                await SwallowChunk(stream, 81920);
-            }
+            await SwallowEverything(stream);
         }
         catch when (TeardownStarted)
         {
             //skip
         }
     }
-    
-    private static async ValueTask SwallowChunk(Stream source, int bytesToSwallow)
+
+    private static readonly byte[] Buffer = new byte[81920];
+
+    private static async ValueTask SwallowEverything(Stream source)
     {
-        var buffer = ArrayPool<byte>.Shared.Rent(81920);
-
-        try
+        while (true)
         {
-            var bytesRead = 0;
-
-            while (bytesRead < bytesToSwallow)
+            var read = await source.ReadAsync(Buffer, 0, Buffer.Length);
+            if (read == 0)
             {
-                var bytesToRead = Math.Min(buffer.Length, bytesToSwallow - bytesRead);
-                var read = await source.ReadAsync(buffer, 0, bytesToRead);
-                if (read == 0)
-                {
-                    throw new EndOfStreamException();
-                }
-
-                bytesRead += read;
+                throw new EndOfStreamException();
             }
-        }
-        finally
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
         }
     }
 }

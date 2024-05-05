@@ -15,8 +15,8 @@ namespace SerializersBenchmark;
 [SimpleJob]
 public class Benchmarks
 {
-    internal int BlackHolePort { get; set; } = 37001;
-    internal int WhiteHolePort { get; set; } = 37000;
+    internal int BlackHolePort { get; set; } = 27001;
+    internal int WhiteHolePort { get; set; } = 27000;
     
     [Params(1, 100, 10_000, 200_000)]
     public int N { get; set; }
@@ -78,10 +78,10 @@ public class Benchmarks
         }
         _serializedValue = _serializer!.Setup(N);
         _serializedArray = _serializedValue.ToArray();
-        var whiteHole = new WhiteHoleServer(WhiteHolePort);
+        
         var blackHole = new BlackHoleServer(BlackHolePort);
-        whiteHole.Start();
-        blackHole.Start();
+        _whiteHole = CreateWhiteHole();
+        _blackHole = CreateBlackHole();
         
         //allow servers to spin up before connecting
         await Task.Delay(100);
@@ -93,8 +93,40 @@ public class Benchmarks
         
         _rabbitToSerialize = rabbitToSerialize;
         _rabbitToDeserialize = rabbitToDeserialize;
-        _whiteHole = whiteHole;
-        _blackHole = blackHole;
+    }
+
+    private IWhiteHole CreateWhiteHole()
+    {
+        while (true)
+        {
+            try
+            {
+                var whiteHole = new WhiteHoleServer(WhiteHolePort);
+                whiteHole.Start();
+                return whiteHole;
+            }
+            catch
+            {
+                WhiteHolePort++;
+            }
+        }
+    }
+    
+    private IBlackHole CreateBlackHole()
+    {
+        while (true)
+        {
+            try
+            {
+                var blackHole = new BlackHoleServer(BlackHolePort);
+                blackHole.Start();
+                return blackHole;
+            }
+            catch
+            {
+                BlackHolePort++;
+            }
+        }
     }
 
     [GlobalCleanup]
