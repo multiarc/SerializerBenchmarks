@@ -10,10 +10,9 @@ namespace SerializersBenchmark;
 [RPlotExporter]
 [MemoryDiagnoser]
 [ExceptionDiagnoser]
-[SimpleJob]
 public class Benchmarks
 {
-    [Params(1, 100, 10_000, 200_000)]
+    [Params(1, 100, 500, 10_000, 200_000)]
     public int N { get; set; }
 
     [Params(
@@ -37,10 +36,8 @@ public class Benchmarks
 #if (NET6_0_OR_GREATER)
         ,typeof(MemoryPack<DataItem>),
         typeof(BinaryPack<DataItem>),
-        typeof(SpanJson<DataItem>)
-#endif
-#if NET8_0
-        ,typeof(SystemTextJsonSourceGen<DataItem>)
+        typeof(SpanJson<DataItem>),
+        typeof(SystemTextJsonSourceGen<DataItem>)
 #endif
 #if NET48
         ,typeof(BinaryFormatter<DataItem>)
@@ -51,43 +48,36 @@ public class Benchmarks
     internal ISerializerTest SerializerTest => _serializer;
     internal MemoryStream SerializedValue => _serializedValue;
     
-    private ISerializerTest _serializer;
+    private ISerializerTestAsync _serializer;
     private MemoryStream _serializedValue;
+    
     
     [GlobalSetup]
     public void Setup()
     {
         if (SerializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
         {
-            _serializer = (ISerializerTest) Activator.CreateInstance(SerializerType,
+            _serializer = (ISerializerTestAsync) Activator.CreateInstance(SerializerType,
                 (Func<int, DataItem>) CreateDataExtensions.Data);
         }
         else
         {
-            _serializer = (ISerializerTest) Activator.CreateInstance(SerializerType,
+            _serializer = (ISerializerTestAsync) Activator.CreateInstance(SerializerType,
                 (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
         }
         _serializedValue = _serializer!.Setup(N);
     }
 
     [Benchmark]
-    public MemoryStream TestSerialize()
+    public MemoryStream Serialize()
     {
         return _serializer.Serialize(_serializer.TestDataObject);
     }
 
     [Benchmark]
-    public object TestDeserialize()
+    public object Deserialize()
     {
         _serializedValue.Position = 0;
         return _serializer.Deserialize(_serializedValue);
-    }
-    
-    [Benchmark]
-    public object EndToEnd()
-    {
-        var serializedValue = _serializer.Serialize(_serializer.TestDataObject);
-        serializedValue.Position = 0;
-        return _serializer.Deserialize(serializedValue);
     }
 }

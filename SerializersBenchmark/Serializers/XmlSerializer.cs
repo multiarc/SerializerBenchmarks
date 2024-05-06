@@ -22,4 +22,6 @@ public class XmlSerializer<T> : TestBase<T>
     {
         return (T) Serializer.Deserialize(stream);
     }
+    
+    //no actual async implementation exists, using default
 }

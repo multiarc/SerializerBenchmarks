@@ -17,4 +17,14 @@ public class ServiceStack<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDa
     {
         return JsonSerializer.DeserializeFromStream<T>(stream);
     }
+
+    public override async Task SerializeAsync(object obj, Stream stream)
+    {
+        await JsonSerializer.SerializeToStreamAsync(obj, stream);
+    }
+
+    public override async Task<object> DeserializeAsync(Stream stream)
+    {
+        return await JsonSerializer.DeserializeFromStreamAsync<T>(stream);
+    }
 }

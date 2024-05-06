@@ -18,4 +18,6 @@ public class DataContract<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDa
     {
         return (T) Serializer.ReadObject(stream);
     }
+    
+    //no actual async implementation exists, using default
 }

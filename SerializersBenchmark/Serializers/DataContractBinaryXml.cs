@@ -22,4 +22,6 @@ public class DataContractBinaryXml<T>(Func<int, T> testDataStrategy) : TestBase<
         var binaryReader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max);
         return Serializer.ReadObject(binaryReader);
     }
+    
+    //no actual async implementation exists, using default
 }

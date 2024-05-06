@@ -1,4 +1,4 @@
-﻿#if NET8_0
+﻿#if NET6_0_OR_GREATER
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -18,13 +18,23 @@ namespace SerializersBenchmark.Serializers
         public override MemoryStream Serialize(object obj)
         {
             var stream = new MemoryStream();
-            JsonSerializer.Serialize(stream, obj, MyJsonContext.Default.Options);
+            JsonSerializer.Serialize(stream, (T)obj, MyJsonContext.Default.Options);
             return stream;
         }
 
         public override object Deserialize(MemoryStream stream)
         {
             return JsonSerializer.Deserialize<T>(stream, MyJsonContext.Default.Options);
+        }
+        
+        public override async Task SerializeAsync(object obj, Stream stream)
+        {
+            await JsonSerializer.SerializeAsync(stream, (T)obj, MyJsonContext.Default.Options);
+        }
+
+        public override async Task<object> DeserializeAsync(Stream stream)
+        {
+            return await JsonSerializer.DeserializeAsync<T>(stream, MyJsonContext.Default.Options);
         }
     }
 }

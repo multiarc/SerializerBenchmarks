@@ -1,26 +1,13 @@
-﻿using SerializersBenchmark;
+﻿using FluentAssertions;
+using SerializersBenchmark.Base;
 using SerializersBenchmark.Models;
 using SerializersBenchmark.Serializers;
 using Xunit;
 
 namespace SerializerBenchmarks.UnitTests;
 
-public class BenchmarkTests
+public class SerializerTests
 {
-    [Fact]
-    public void SetupTest()
-    {
-        Benchmarks benchmark = new()
-        {
-            N = 1,
-            SerializerType = typeof(MessagePack<DataItem>)
-        };
-        benchmark.Setup();
-        Assert.NotNull(benchmark.SerializerTest);
-        Assert.NotNull(benchmark.SerializedValue);
-        Assert.NotEqual(0, benchmark.SerializedValue.Length);
-    }
-
     [Theory]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
@@ -50,17 +37,25 @@ public class BenchmarkTests
 #endif
     public void SerializeTest(Type serializerType)
     {
-        Benchmarks benchmark = new()
+        ISerializerTestAsync serializer;
+        if (serializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
         {
-            N = 1,
-            SerializerType = serializerType,
-        };
-        benchmark.Setup();
-        var stream = benchmark.Serialize();
-        Assert.NotNull(stream);
-        Assert.NotEqual(0, stream.Length);
-    }
+            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
+                (Func<int, DataItem>) CreateDataExtensions.Data);
+        }
+        else
+        {
+            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
+                (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
+        }
 
+        Assert.NotNull(serializer);
+        serializer.Setup(1);
+        var result = serializer.Serialize(serializer.TestDataObject);
+        Assert.NotNull(result);
+        Assert.NotEqual(0, result.Length);
+    }
+    
     [Theory]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
@@ -90,13 +85,24 @@ public class BenchmarkTests
 #endif
     public void DeserializeTest(Type serializerType)
     {
-        Benchmarks benchmark = new()
+        ISerializerTestAsync serializer;
+        if (serializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
         {
-            N = 1,
-            SerializerType = serializerType,
-        };
-        benchmark.Setup();
-        var value = benchmark.Deserialize();
-        Assert.NotNull(value);
+            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
+                (Func<int, DataItem>) CreateDataExtensions.Data);
+        }
+        else
+        {
+            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
+                (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
+        }
+
+        Assert.NotNull(serializer);
+        serializer.Setup(1);
+        var stream = serializer.Serialize(serializer.TestDataObject);
+        stream.Position = 0;
+        var result = serializer.Deserialize(stream);
+        Assert.NotNull(result);
+        result.Should().BeEquivalentTo(serializer.TestDataObject);
     }
 }

@@ -22,8 +22,10 @@ public class Ceras<T>(Func<int, T> testDataStrategy) : TestBase<T>(testDataStrat
         T ret = default;
         int offset = 0;
         //double copy involved,
-        //but since serializer doesn't support streams natively we would have to extract an array anyways
+        //but since serializer doesn't support streams natively we would have to extract an array anyway
         Serializer.Deserialize(ref ret, stream.ToArray(), ref offset, (int) stream.Length);
         return ret;
     }
+    
+    //no actual async implementation exists, using default
 }

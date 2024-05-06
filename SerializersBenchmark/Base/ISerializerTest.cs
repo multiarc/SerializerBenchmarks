@@ -7,3 +7,9 @@ public interface ISerializerTest
     MemoryStream Setup(int numberOfObjects);
     object TestDataObject { get; }
 }
+
+public interface ISerializerTestAsync: ISerializerTest
+{
+    Task SerializeAsync(object obj, Stream stream);
+    Task<object> DeserializeAsync(Stream stream);
+}
