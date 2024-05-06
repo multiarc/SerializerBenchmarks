@@ -63,8 +63,8 @@ jobs:
     needs: build-windows
     if: ${{ github.ref == 'refs/heads/main' }}
     matrix:
-        target: ['net48', 'net6.0', 'net8.0']
-        benchmarkSet: ['SerializersBenchmark.AsyncBenchmarks*', 'SerializersBenchmark.Benchmarks*']
+        target: [net48, net6.0, net8.0]
+        benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*]
 
     steps:
       - uses: actions/checkout@v4
