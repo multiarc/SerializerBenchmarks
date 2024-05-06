@@ -21,7 +21,7 @@ public class AsyncBenchmarks
     [Params(true, false)]
     public bool UseBuffer { get; set; }
     
-    [Params(1, 2, 4, 8, 16, 32, 64)]
+    [Params(1, 4, 16, 64)]
     public int QueueLength { get; set; }
 
     [Params(

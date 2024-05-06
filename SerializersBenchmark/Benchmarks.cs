@@ -12,7 +12,7 @@ namespace SerializersBenchmark;
 [ExceptionDiagnoser]
 public class Benchmarks
 {
-    [Params(1, 100, 10_000, 200_000)]
+    [Params(1, 100, 500, 10_000, 200_000)]
     public int N { get; set; }
 
     [Params(
