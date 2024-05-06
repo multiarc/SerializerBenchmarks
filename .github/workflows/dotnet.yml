@@ -86,7 +86,7 @@ jobs:
       - name: Publish Results
         uses: actions/upload-artifact@v4
         with:
-          name: '${{target}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}'
+          name: ${{target}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}
           path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
           compression-level: 9
         
