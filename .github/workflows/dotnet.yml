@@ -65,30 +65,30 @@ jobs:
         matrix:
             target: [net48, net6.0, net8.0]
             benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*]
-    if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET 6
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 6.0.x
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore -f ${{target}}
-      - name: Execute
-        working-directory: ./SerializersBenchmark
-        run: dotnet run -c Release -f ${{target}} -- --job default --runtimes ${{target}} --filter ${{benchmarkSet}}
-      - name: Publish Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{target}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}
-          path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
-          compression-level: 9
+        steps:
+          - uses: actions/checkout@v4
+          - name: Setup .NET 6
+            uses: actions/setup-dotnet@v4
+            with:
+              dotnet-version: 6.0.x
+          - name: Setup .NET 8
+            uses: actions/setup-dotnet@v4
+            with:
+              dotnet-version: 8.0.x
+          - name: Restore dependencies
+            run: dotnet restore
+          - name: Build
+            run: dotnet build --no-restore -f ${{target}}
+          - name: Execute
+            working-directory: ./SerializersBenchmark
+            run: dotnet run -c Release -f ${{target}} -- --job default --runtimes ${{target}} --filter ${{benchmarkSet}}
+          - name: Publish Results
+            uses: actions/upload-artifact@v4
+            with:
+              name: ${{target}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}
+              path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
+              compression-level: 9
         
 #TODO process results
