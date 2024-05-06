@@ -13,6 +13,7 @@ jobs:
   build-windows:
 
     runs-on: windows-latest
+    if: ${{ github.ref != 'refs/heads/main' }}
 
     steps:
     - uses: actions/checkout@v4
@@ -85,7 +86,7 @@ jobs:
     needs: build-windows-main
     strategy:
         matrix:
-            target: [net48, net6.0, net8.0]
+            framework: [net48, net6.0, net8.0]
             benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*]
 
     steps:
@@ -101,14 +102,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --no-restore -f ${{target}}
+        run: dotnet build --no-restore -f ${{framework}}
       - name: Execute
         working-directory: ./SerializersBenchmark
-        run: dotnet run -c Release -f ${{target}} -- --job default --runtimes ${{target}} --filter ${{benchmarkSet}}
+        run: dotnet run -c Release -f ${{framework}} -- --job default --runtimes ${{framework}} --filter ${{benchmarkSet}}
       - name: Publish Results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{target}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}
+          name: ${{framework}}${{ if(benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*') }}-async${{ endif }}
           path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
           compression-level: 9
         
