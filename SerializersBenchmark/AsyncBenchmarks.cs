@@ -10,7 +10,6 @@ namespace SerializersBenchmark;
 [RPlotExporter]
 [MemoryDiagnoser]
 [ExceptionDiagnoser]
-[SimpleJob]
 public class AsyncBenchmarks
 {
     internal int BlackHolePort { get; set; } = 27001;

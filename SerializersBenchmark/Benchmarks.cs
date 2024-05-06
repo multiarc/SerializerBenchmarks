@@ -10,7 +10,6 @@ namespace SerializersBenchmark;
 [RPlotExporter]
 [MemoryDiagnoser]
 [ExceptionDiagnoser]
-[SimpleJob]
 public class Benchmarks
 {
     [Params(1, 100, 10_000, 200_000)]
