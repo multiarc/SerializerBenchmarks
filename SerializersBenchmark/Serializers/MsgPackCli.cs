@@ -1,4 +1,5 @@
-﻿using MsgPack.Serialization;
+﻿using MsgPack;
+using MsgPack.Serialization;
 using SerializersBenchmark.Base;
 
 namespace SerializersBenchmark.Serializers;
@@ -24,11 +25,13 @@ public class MsgPackCli<T>(Func<int, T> testDataStrategy) : TestBase<T>(testData
     {
         var packer = MsgPack.Packer.Create(stream);
         await Serializer.PackToAsync(packer, obj, CancellationToken.None);
+        await packer.FlushAsync();
     }
 
     public override async Task<object> DeserializeAsync(Stream stream)
     {
         var unpacker = MsgPack.Unpacker.Create(stream);
+        await unpacker.ReadAsync();
         return await Serializer.UnpackFromAsync(unpacker, CancellationToken.None);
     }
 }

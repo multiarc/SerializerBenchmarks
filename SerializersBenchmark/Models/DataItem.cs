@@ -17,20 +17,15 @@ namespace SerializersBenchmark.Models;
 public partial class DataItem
 {
     [DataMember, ProtoMember(1), Key(0)]
-    public List<ChildDataItem> Children
-    {
-        get;
-        set;
-    }
+    public List<ChildDataItem> Children { get; set; }
 
     [DataMember, ProtoMember(2), Key(1)]
     private string _privateMember;
 
-
     public DataItem(string privateMember)
     {
-            _privateMember = privateMember;
-        }
+        _privateMember = privateMember;
+    }
 #if NET6_0_OR_GREATER
     [MemoryPackConstructor]
 #endif
@@ -47,6 +42,7 @@ public partial class DataItem
 ]
 public partial class ChildDataItem
 {
+    
     [DataMember, ProtoMember(1), Key(0)]
     public string Title;
 

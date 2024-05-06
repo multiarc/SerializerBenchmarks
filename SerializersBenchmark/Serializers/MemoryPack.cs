@@ -13,7 +13,7 @@ namespace SerializersBenchmark.Serializers
             var stream = new MemoryStream();
             var writer = new ArrayBufferWriter<byte>();
             MemoryPackSerializer.Serialize(writer, (T)obj, options: null);
-            stream.Write(writer.GetMemory().Span);
+            stream.Write(writer.WrittenSpan);
             return stream;
         }
 
