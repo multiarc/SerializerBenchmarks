@@ -105,7 +105,7 @@ jobs:
         run: dotnet build --no-restore -f ${{matrix.target}}
       - name: Execute
         working-directory: ./SerializersBenchmark
-        run: dotnet run -c Release -f ${{matrix.target}} -- --job default --runtimes ${{matrix.target}} --filter ${{benchmarkSet}}
+        run: dotnet run -c Release -f ${{matrix.target}} -- --job default --runtimes ${{matrix.target}} --filter ${{matrix.benchmarkSet}}
       - name: Publish Results
         uses: actions/upload-artifact@v4
         with:
