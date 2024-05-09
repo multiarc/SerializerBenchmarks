@@ -25,6 +25,7 @@ public class AsyncSerializerTests
     [InlineData(typeof(XmlSerializer<DataItem>))]
     [InlineData(typeof(NewtonsoftJson<DataItem>))]
     [InlineData(typeof(MsgPackCli<DataItem>))]
+    [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
     [InlineData(typeof(MemoryPack<DataItem>))]
@@ -73,6 +74,7 @@ public class AsyncSerializerTests
     [InlineData(typeof(XmlSerializer<DataItem>))]
     [InlineData(typeof(NewtonsoftJson<DataItem>))]
     [InlineData(typeof(MsgPackCli<DataItem>))]
+    [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
     [InlineData(typeof(MemoryPack<DataItem>))]

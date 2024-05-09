@@ -41,6 +41,7 @@ public class AsyncBenchmarks
         typeof(XmlSerializer<DataItem>),
         typeof(NewtonsoftJson<DataItem>),
         typeof(MsgPackCli<DataItem>),
+        typeof(MsgPackCliDefaultAsync<DataItem>),
         typeof(SystemTextJson<DataItem>)
 #if (NET6_0_OR_GREATER)
         ,typeof(MemoryPack<DataItem>),
