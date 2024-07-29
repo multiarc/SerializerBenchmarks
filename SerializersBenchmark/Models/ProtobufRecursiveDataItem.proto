@@ -1,0 +1,11 @@
+﻿// https://github.com/protocolbuffers/protobuf/releases
+// protoc --csharp_out=<absolute_path_to_this_file> --proto_path=<absolute_path_to_this_file> ProtobufDataItem.proto
+
+syntax = "proto3";
+
+option csharp_namespace = "SerializersBenchmark.Models";
+
+message ProtobufRecursiveDataItem {
+    ProtobufRecursiveDataItem Next = 1;
+    string Text = 2;
+}
