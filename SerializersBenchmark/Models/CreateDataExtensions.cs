@@ -4,6 +4,44 @@ namespace SerializersBenchmark.Models;
 
 public static class CreateDataExtensions
 {
+    public static RecursiveDataItem RecursiveData(int itemsToCreate)
+    {
+        var result = new RecursiveDataItem
+        {
+            Text = "Level 0"
+        };
+        var current = result;
+        for (var i = 0; i < itemsToCreate; i++)
+        {
+            current.Next = new RecursiveDataItem()
+            {
+                Text = $"Level {i + 1}"
+            };
+            current = current.Next;
+        }
+
+        return result;
+    }
+
+    public static ProtobufRecursiveDataItem ProtobufRecursiveData(int itemsToCreate)
+    {
+        var result = new ProtobufRecursiveDataItem
+        {
+            Text = $"Level 0"
+        };
+        var current = result;
+        for (var i = 0; i < itemsToCreate; i++)
+        {
+            current.Next = new ProtobufRecursiveDataItem
+            {
+                Text = $"Level {i + 1}"
+            };
+            current = current.Next;
+        }
+
+        return result;
+    }
+    
     public static DataItem Data(int itemsToCreate)
     {
         return new DataItem("private value")

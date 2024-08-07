@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         target: [net48, net6.0, net8.0]
-        benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*]
+        benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*, SerializersBenchmark.RecursiveBenchmarks*]
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +86,41 @@ jobs:
       - name: Publish Results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.target}}${{ matrix.benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*' && '-async' || '' }}
+          name: ${{matrix.target}}${{ matrix.benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*' && '-async' || (matrix.benchmarkSet == 'SerializersBenchmark.RecursiveBenchmarks*' && '-recursive' || '') }}
+          path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
+          compression-level: 9
+          
+  benchmark-linux:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 320 #6 hours
+    needs: build-linux
+    strategy:
+      matrix:
+        target: [net6.0, net8.0]
+        benchmarkSet: [SerializersBenchmark.AsyncBenchmarks*, SerializersBenchmark.Benchmarks*, SerializersBenchmark.RecursiveBenchmarks*]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -f ${{matrix.target}}
+      - name: Execute
+        working-directory: ./SerializersBenchmark
+        run: dotnet run -c Release -f ${{matrix.target}} -- --job default --runtimes ${{matrix.target}} --filter ${{matrix.benchmarkSet}}
+      - name: Publish Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.target}}${{ matrix.benchmarkSet == 'SerializersBenchmark.AsyncBenchmarks*' && '-async' || (matrix.benchmarkSet == 'SerializersBenchmark.RecursiveBenchmarks*' && '-recursive' || '') }}
           path: ./SerializersBenchmark/BenchmarkDotNet.Artifacts/results
           compression-level: 9
         

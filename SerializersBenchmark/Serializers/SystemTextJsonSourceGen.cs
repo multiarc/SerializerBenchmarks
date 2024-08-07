@@ -9,6 +9,7 @@ namespace SerializersBenchmark.Serializers
 {
     [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Default, IncludeFields = true)]
     [JsonSerializable(typeof(DataItem))]
+    [JsonSerializable(typeof(RecursiveDataItem))]
     internal partial class MyJsonContext : JsonSerializerContext
     {
     }
