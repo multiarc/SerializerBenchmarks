@@ -10,7 +10,6 @@ Implemented benchmarks for the following serializers:
 - System.Text.JsonSerializer
 - System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
 - System.Xml.Serialization.XmlSerializer
-- BinaryPack (https://github.com/Sergio0694/BinaryPack)
 - Bois (https://github.com/salarcode/Bois)
 - Ceras (https://github.com/rikimaru0345/Ceras)
 - FastJson ( https://github.com/mgholam/fastJSON/)
@@ -26,5 +25,6 @@ Implemented benchmarks for the following serializers:
 - SpanJson (https://github.com/Tornhoof/SpanJson)
 - UTF8Json (https://github.com/neuecc/Utf8Json)
 
-#### Legacy Serializers
+#### Legacy and no longer supported Serializers
 - BinaryFormatter
+- BinaryPack (https://github.com/Sergio0694/BinaryPack)
