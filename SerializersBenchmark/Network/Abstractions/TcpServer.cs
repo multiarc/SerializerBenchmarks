@@ -21,6 +21,7 @@ public abstract class TcpServer(int port) : IServer
                 while (true)
                 {
                     _connectedClient = await _tcpListener.AcceptTcpClientAsync();
+                    _connectedClient.Client.NoDelay = true;//disable Nagle's algorithm for low latency
                     await OnClientConnected(_connectedClient);
                 }
             }
