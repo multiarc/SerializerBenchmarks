@@ -37,7 +37,7 @@ public sealed class Rabbit : IRabbit, ITcpClient
             await _serializer.SerializeAsync(value, stream).ConfigureAwait(false);
         }
 
-        await _networkStream.FlushAsync().ConfigureAwait(false);
+        await stream.FlushAsync().ConfigureAwait(false);
     }
 
     public async Task<object> ReceiveAsync(int expectedSize)
