@@ -34,7 +34,7 @@ public class Benchmarks
         typeof(MsgPackCli<DataItem>),
         typeof(SystemTextJson<DataItem>)
 #if (NET6_0_OR_GREATER)
-        ,typeof(MemoryPack<DataItem>),
+        ,typeof(MemoryPack<DataItemMemoryPack>),
         typeof(BinaryPack<DataItem>),
         typeof(SpanJson<DataItem>),
         typeof(SystemTextJsonSourceGen<DataItem>)
@@ -55,16 +55,7 @@ public class Benchmarks
     [GlobalSetup]
     public void Setup()
     {
-        if (SerializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
-        {
-            _serializer = (ISerializerTestAsync) Activator.CreateInstance(SerializerType,
-                (Func<int, DataItem>) CreateDataExtensions.Data);
-        }
-        else
-        {
-            _serializer = (ISerializerTestAsync) Activator.CreateInstance(SerializerType,
-                (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
-        }
+        _serializer = SerializerType.CreateSerializerInstance();
         _serializedValue = _serializer!.Setup(N);
     }
 
