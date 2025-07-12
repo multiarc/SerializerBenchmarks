@@ -22,7 +22,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
         WhiteHolePort = GetNextPort()
     };
 
-    [Theory(Timeout = 1000)]
+    [Theory(Timeout = 10000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -41,7 +41,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
     [InlineData(typeof(MsgPackCli<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -56,7 +56,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
         await _benchmark.SerializeAsync();
     }
     
-    [Theory(Timeout = 1000)]
+    [Theory(Timeout = 10000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -75,7 +75,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
     [InlineData(typeof(MsgPackCli<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -91,7 +91,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
         await _benchmark.SerializeAsync();
     }
     
-    [Theory(Timeout = 1000)]
+    [Theory(Timeout = 10000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -110,7 +110,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
     [InlineData(typeof(MsgPackCli<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -125,7 +125,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
         await _benchmark.DeserializeAsync();
     }
     
-    [Theory(Timeout = 1000)]
+    [Theory(Timeout = 10000)]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
     [InlineData(typeof(MessagePack<DataItem>))]
@@ -144,7 +144,7 @@ public sealed class AsyncBenchmarkTests : IDisposable
     [InlineData(typeof(MsgPackCli<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]

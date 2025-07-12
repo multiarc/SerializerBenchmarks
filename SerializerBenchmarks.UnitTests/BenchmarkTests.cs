@@ -41,7 +41,7 @@ public class BenchmarkTests
     [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -82,7 +82,7 @@ public class BenchmarkTests
     [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]

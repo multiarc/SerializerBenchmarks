@@ -9,9 +9,9 @@ using ProtoBuf;
 
 namespace SerializersBenchmark.Models;
 
-[Serializable, DataContract, ProtoContract, MessagePackObject
+[Serializable, DataContract, ProtoContract, MessagePackObject(AllowPrivate = true)
 #if NET6_0_OR_GREATER
- , MemoryPackable, BinarySerialization(SerializationMode.Properties | SerializationMode.NonPublicMembers)
+ , BinarySerialization(SerializationMode.Properties | SerializationMode.NonPublicMembers)
 #endif
 ]
 public partial class DataItem
@@ -26,9 +26,6 @@ public partial class DataItem
     {
         _privateMember = privateMember;
     }
-#if NET6_0_OR_GREATER
-    [MemoryPackConstructor]
-#endif
     public DataItem()
     {
         

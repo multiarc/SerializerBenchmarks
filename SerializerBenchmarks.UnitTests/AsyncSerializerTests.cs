@@ -28,7 +28,7 @@ public class AsyncSerializerTests
     [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -38,17 +38,7 @@ public class AsyncSerializerTests
 #endif
     public async Task SerializeAsyncTest(Type serializerType)
     {
-        ISerializerTestAsync serializer;
-        if (serializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
-        {
-            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
-                (Func<int, DataItem>) CreateDataExtensions.Data);
-        }
-        else
-        {
-            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
-                (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
-        }
+        var serializer = serializerType.CreateSerializerInstance();
 
         Assert.NotNull(serializer);
         serializer.Setup(1);
@@ -56,7 +46,7 @@ public class AsyncSerializerTests
         await serializer.SerializeAsync(serializer.TestDataObject, memory);
         Assert.NotEqual(0, memory.Length);
     }
-    
+
     [Theory]
     [InlineData(typeof(Ceras<DataItem>))]
     [InlineData(typeof(Utf8JsonSerializer<DataItem>))]
@@ -77,7 +67,7 @@ public class AsyncSerializerTests
     [InlineData(typeof(MsgPackCliDefaultAsync<DataItem>))]
     [InlineData(typeof(SystemTextJson<DataItem>))]
 #if (NET6_0_OR_GREATER)
-    [InlineData(typeof(MemoryPack<DataItem>))]
+    [InlineData(typeof(MemoryPack<DataItemMemoryPack>))]
     [InlineData(typeof(BinaryPack<DataItem>))]
     [InlineData(typeof(SpanJson<DataItem>))]
     [InlineData(typeof(SystemTextJsonSourceGen<DataItem>))]
@@ -87,17 +77,7 @@ public class AsyncSerializerTests
 #endif
     public async Task DeserializeAsyncTest(Type serializerType)
     {
-        ISerializerTestAsync serializer;
-        if (serializerType != typeof(GoogleProtobuf<ProtobufDataItem>))
-        {
-            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
-                (Func<int, DataItem>) CreateDataExtensions.Data);
-        }
-        else
-        {
-            serializer = (ISerializerTestAsync) Activator.CreateInstance(serializerType,
-                (Func<int, ProtobufDataItem>) CreateDataExtensions.ProtobufData);
-        }
+        var serializer = serializerType.CreateSerializerInstance();
 
         Assert.NotNull(serializer);
         serializer.Setup(1);
