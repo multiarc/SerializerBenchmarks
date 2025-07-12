@@ -16,11 +16,11 @@ public sealed class Rabbit : IRabbit, ITcpClient
         _port = port;
         _useBufferedStream = useBufferedStream;
         _tcpClient = new TcpClient();
-        _tcpClient.Client.NoDelay = true; //disable Nagle's algorithm for low latency
+        _tcpClient.Client.NoDelay = true; // disable Nagle's algorithm for low latency
     }
 
     public async Task ConnectAsync() {
-        await _tcpClient.ConnectAsync("127.0.0.1", _port);
+        await _tcpClient.ConnectAsync(TcpServer.LOCALHOST, _port).ConfigureAwait(false);
         _networkStream = _tcpClient.GetStream();
     }
 

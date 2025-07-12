@@ -5,7 +5,8 @@ namespace SerializersBenchmark.Network.Abstractions;
 
 public abstract class TcpServer(int port) : IServer
 {
-    private readonly TcpListener _tcpListener = new(IPAddress.Parse("127.0.0.1"), port);
+    public const string LOCALHOST = "127.0.0.1";
+    private readonly TcpListener _tcpListener = new(IPAddress.Parse(LOCALHOST), port);
     private TcpClient _connectedClient;
     protected bool TeardownStarted;
 
