@@ -5,7 +5,7 @@ namespace SerializersBenchmark.Network.Abstractions;
 
 public abstract class TcpServer(int port) : IServer
 {
-    private readonly TcpListener _tcpListener = new(IPAddress.Parse("127.0.0.1"), port);
+    private readonly TcpListener _tcpListener = new(IPAddress.Loopback, port);
     private TcpClient _connectedClient;
     protected bool TeardownStarted;
 
@@ -21,6 +21,7 @@ public abstract class TcpServer(int port) : IServer
                 while (true)
                 {
                     _connectedClient = await _tcpListener.AcceptTcpClientAsync();
+                    _connectedClient.Client.NoDelay = true; //disable Nagle's algorithm for low latency
                     await OnClientConnected(_connectedClient);
                 }
             }
